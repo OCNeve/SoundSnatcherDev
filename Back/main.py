@@ -2,7 +2,6 @@ from sclib import SoundcloudAPI, Playlist, Track
 from os import mkdir, path, getcwd, rename, listdir, unlink, remove
 from os.path import exists, join, isfile, isdir, islink, getmtime
 from unicodedata import normalize
-from yt_dlp import
 import subprocess
 from json import loads
 from shutil import rmtree
