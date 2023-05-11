@@ -4,8 +4,9 @@ import sv_ttk
 from Back.main import SoundcloudSnatcher
 from os import getcwd
 from threading import Thread
+from PIL import Image, ImageTk
 from Front.Desktop.locales.localesHander import getString
-
+from Back.knownpaths import get_path
 
 class GUI:
     def __init__(self):
@@ -61,7 +62,7 @@ class GUI:
         path_frame = Frame(self.main_frame)
         path_frame.pack(anchor='w')
         self.path = Entry(path_frame, width=40)
-        self.path.insert(0, getcwd())
+        self.path.insert(0, get_path('Downloads'))
         self.path.grid(row=0, column=0)
         select_dir = Button(
             path_frame,
@@ -78,11 +79,10 @@ class GUI:
         self.loading_frame = Frame(self.main_frame)
         self.loading_frame.pack()
 
+
     def getSnatchFunc(self):
-        if self.snatch_type.get() == 'playlist':
-            return self.Back.snatchPlaylist
-        else:
-            return self.Back.snatchSong
+        return self.Back.downloadSourceManager
+
 
     def snatchSongs(self):
         self.Back = SoundcloudSnatcher(self.snatch_type.get(),self.url.get(), self.path.get(), auto_run = False)
@@ -122,8 +122,6 @@ class GUI:
         dir = filedialog.askdirectory()
         self.path.delete(0, END)
         self.path.insert(0, dir)
-
-
 
 
 

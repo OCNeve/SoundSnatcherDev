@@ -1,0 +1,1 @@
+C:\Python311\python.exe -m PyInstaller --onefile --noconsole --name="SoundSnatcher" --icon=logo.png --collect-data sv_ttk runDesktop.py

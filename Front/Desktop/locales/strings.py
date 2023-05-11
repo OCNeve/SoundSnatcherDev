@@ -1,21 +1,21 @@
 class Labels:
     class French:
-        url = 'Url'
+        url = 'URL'
         file_type = "Type de téléchargement"
         path = "Dossier du téléchargement"
 
     class English:
-        url = "Url"
+        url = "URL"
         file_type = "Download type"
         path = "Download path"
 
 class Radiobuttons:
     class French:
-        playlist = "Playlist"
+        playlist = "Playlist / Album"
         song = "Musique seule"
 
     class English:
-        playlist = "Playlist"
+        playlist = "Playlist / Album"
         song = "Song"
 
 class Buttons:
