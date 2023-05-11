@@ -2,6 +2,10 @@
 distribution/
 dist/
 build/
+*.exe
+*.mp3
+*.mp4
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
