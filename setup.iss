@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Sound Snatcher"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "Olivier Neve"
-#define MyAppExeName "Sound Snatcher.exe"
+#define MyAppExeName "SoundSnatcher.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -32,7 +32,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "C:\Projects\Tools_and_utilities\soundcloud_getter\dist\Sound Snatcher.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Projects\Tools_and_utilities\soundcloud_getter\dist\SoundSnatcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Projects\Tools_and_utilities\soundcloud_getter\logo.png"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
