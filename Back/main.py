@@ -1,8 +1,10 @@
 from sclib import SoundcloudAPI, Playlist, Track
 from os import mkdir, path, getcwd, rename, listdir, unlink, remove
 from os.path import exists, join, isfile, isdir, islink, getmtime
+from os.path import join as osjoin
 from unicodedata import normalize
 import subprocess
+from re import sub
 from json import loads
 from shutil import rmtree
 from pytube import Playlist, YouTube
@@ -60,7 +62,7 @@ class SoundcloudSnatcher:
         return self.__total_playlist_length
 
     def emptyTemporaryDir(self):
-        folder = fr"{getcwd()}\tmp"
+        folder = osjoin(getcwd(), "tmp")
         for filename in listdir(folder):
             file_path = join(folder, filename)
             try:
@@ -74,11 +76,11 @@ class SoundcloudSnatcher:
     def downloadFromSpotify(self):
         self.emptyTemporaryDir()
         if "playlist" in self.url or "album" in self.url:
-            first_cmd = fr"spotdl save {self.url} --save-file tmp\meta.spotdl"
+            first_cmd = fr"spotdl save {self.url} --save-file {osjoin('tmp', 'meta.spotdl')}"
             o = subprocess.check_output(first_cmd.split())
-            if not exists(r'tmp\meta.json'):
-                rename(r"tmp\meta.spotdl", r"tmp\meta.json")
-            metadata = loads(open(r"tmp\meta.json", "r").read())
+            if not exists(osjoin('tmp', 'meta.json')):
+                rename(osjoin("tmp", "meta.spotdl"), osjoin('tmp', 'meta.json'))
+            metadata = loads(open(osjoin('tmp', 'meta.json'), "r").read())
             self.__total_playlist_length = len(metadata)
             for index, song in enumerate(metadata):
                 self.__current_index = index
@@ -93,24 +95,23 @@ class SoundcloudSnatcher:
     def downlaodFromYoutube(self):
         start_time = time()
         if "playlist" in self.url:
-            playlist = Playlist(self.url)
+            playlist = Playlist(self.url) # , use_oauth=True, allow_oauth_cache=True
             self.__total_playlist_length = len(playlist.videos)
             for index, video in enumerate(playlist.videos):
-                self.__current_index = index
-                video = video.streams.filter(only_audio=True)
-                video.first().download(output_path=self.dir)
+                    self.__current_index = index
+                    video = video.streams.filter(only_audio=True)
+                    video.first().download(output_path=self.dir)
         else:
-            youtube = YouTube(self.url)
+            youtube = YouTube(self.url) # , use_oauth=True, allow_oauth_cache=True
             youtube = youtube.streams.filter(only_audio=True).all()
             youtube[0].download(output_path=self.dir)
 
         for file in listdir(self.dir):
-            if getmtime(f'{self.dir}\\{file}') > start_time:
-                print(getmtime(f'{self.dir}\\{file}'))
+            if getmtime(osjoin(self.dir, file)) > start_time:
                 try:
-                    rename(f'{self.dir}\\{file}', f'{self.dir}\\{file[:-1]}3')
+                    rename(osjoin(self.dir, file), osjoin(self.dir, f'{file[:-1]}3'))
                 except FileExistsError:
-                    remove(f'{self.dir}\\{file}')
+                    remove(osjoin(self.dir, file))
 
     def downloadSourceManager(self):
         if "spotify" in self.url:
@@ -125,7 +126,6 @@ class SoundcloudSnatcher:
 
     def snatchPlaylist(self):
         playlist = self.api.resolve(self.url)
-        assert type(playlist) is Playlist
         self.mkdirIfNotExists()
         self.__total_playlist_length = len(playlist.tracks)
         for index, track in enumerate(playlist.tracks):
@@ -145,14 +145,11 @@ class SoundcloudSnatcher:
     def constructFileName(self, track):
         filename = f'{SoundcloudSnatcher.slugify(track.artist)} - {SoundcloudSnatcher.slugify(track.title)}.mp3'
         if not self.no_dir:
-            filename = f'{self.dir}\\{filename}'
+            filename = osjoin(self.dir, filename)
         if self.specific_dir is not None:
             return filename
-        return f'.\\{filename}'
+        return osjoin('.', filename)
 
     def mkdirIfNotExists(self):
         if not path.exists(self.dir) and not self.no_dir:
             mkdir(self.dir)
-
-#SoundcloudSnatcher('playlist',"https://soundcloud.com/user-802191077/sets/goodfuckingcore")
-#SoundcloudSnatcher('song',"https://soundcloud.com/argotek/acid-marry-me?in=user-802191077/sets/goodfuckingcore", specific_dir="C:\\Projects-data")

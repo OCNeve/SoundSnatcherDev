@@ -1,12 +1,12 @@
 from tkinter import Tk, StringVar, IntVar, filedialog, W, E, END, PhotoImage
 from tkinter.ttk import Frame, Label, Entry, Radiobutton, Button, Progressbar, Style
 import sv_ttk
-from Back.main import SoundcloudSnatcher
 from os import getcwd
 from threading import Thread
 from PIL import Image, ImageTk
 from Front.Desktop.locales.localesHander import getString
 from Back.knownpaths import get_path
+from Back.main import SoundcloudSnatcher
 
 class GUI:
     def __init__(self):

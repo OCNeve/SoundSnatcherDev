@@ -2,6 +2,7 @@ import ctypes, sys
 from ctypes import windll, wintypes
 from uuid import UUID
 from os.path import expanduser
+from os import sep
 
 class GUID(ctypes.Structure):   # [1]
     _fields_ = [
@@ -136,8 +137,8 @@ def get_path(folderid, user_handle=UserHandle.common):
         raise PathNotFoundException()
     path = pPath.value
     _CoTaskMemFree(pPath)
-    if r"\Default" in path:
-        username = expanduser('~').split('\\')[-1]
+    if "Default" in path:
+        username = expanduser('~').split(sep)[-1]
         path = path.replace('Default', username)
     return path
 
