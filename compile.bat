@@ -1,1 +1,1 @@
-C:\Python311\python.exe -m PyInstaller --onefile --noconsole --name="SoundSnatcher" --icon=logo.png --collect-data sv_ttk runDesktop.py
+C:\Users\olivi\AppData\Local\Programs\Python\Python311\python.exe -m poetry run python -m PyInstaller --onefile --noconsole --name="SoundSnatcher" --icon=logo.png --collect-data sv_ttk --collect-data spotdl runDesktop.py

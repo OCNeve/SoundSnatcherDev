@@ -11,6 +11,7 @@ from pytube import Playlist, YouTube
 from time import time
 from Front.Desktop.locales.localesHander import getString
 
+
 class SoundcloudSnatcher:
     @staticmethod
     def slugify(value, allow_unicode=False):
@@ -29,7 +30,7 @@ class SoundcloudSnatcher:
         value = sub(r'[^\w\s-]', '', value.lower())
         return sub(r'[-\s]+', '-', value).strip('-_')
 
-    def __init__(self, snatch_type, url, specific_dir = None, no_dir = False, auto_run=True):
+    def __init__(self, snatch_type, url, specific_dir=None, no_dir=False, auto_run=True):
         self.__current_index = 0
         self.__total_playlist_length = 100
         self.api = SoundcloudAPI()
@@ -95,14 +96,14 @@ class SoundcloudSnatcher:
     def downlaodFromYoutube(self):
         start_time = time()
         if "playlist" in self.url:
-            playlist = Playlist(self.url) # , use_oauth=True, allow_oauth_cache=True
+            playlist = Playlist(self.url)  # , use_oauth=True, allow_oauth_cache=True
             self.__total_playlist_length = len(playlist.videos)
             for index, video in enumerate(playlist.videos):
-                    self.__current_index = index
-                    video = video.streams.filter(only_audio=True)
-                    video.first().download(output_path=self.dir)
+                self.__current_index = index
+                video = video.streams.filter(only_audio=True)
+                video.first().download(output_path=self.dir)
         else:
-            youtube = YouTube(self.url) # , use_oauth=True, allow_oauth_cache=True
+            youtube = YouTube(self.url)  # , use_oauth=True, allow_oauth_cache=True
             youtube = youtube.streams.filter(only_audio=True).all()
             youtube[0].download(output_path=self.dir)
 
