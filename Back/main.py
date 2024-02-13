@@ -1,6 +1,6 @@
 from sclib import SoundcloudAPI, Playlist, Track
 from os import mkdir, path, getcwd, rename, listdir, unlink, remove
-from os.path import exists, join, isfile, isdir, islink, getmtime
+from os.path import exists, isfile, isdir, islink, getmtime
 from os.path import join as osjoin
 from unicodedata import normalize
 import subprocess
@@ -9,10 +9,12 @@ from json import loads
 from shutil import rmtree
 from pytube import Playlist, YouTube
 from time import time
-from Front.Desktop.locales.localesHander import getString
+from spotdl import utils
 
 
-class SoundcloudSnatcher:
+
+
+class SoundSnatcherBackend:
     @staticmethod
     def slugify(value, allow_unicode=False):
         """
@@ -41,7 +43,7 @@ class SoundcloudSnatcher:
         self.__error_message = None
         if not self.no_dir:
             self.dir = self.specific_dir if self.specific_dir is not None \
-                else SoundcloudSnatcher.slugify(self.url.split("/")[-1])
+                else SoundSnatcherBackend.slugify(self.url.split("/")[-1])
         else:
             self.dir = ""
         if auto_run:
@@ -64,8 +66,10 @@ class SoundcloudSnatcher:
 
     def emptyTemporaryDir(self):
         folder = osjoin(getcwd(), "tmp")
+        if not isdir(folder):
+            mkdir(folder)
         for filename in listdir(folder):
-            file_path = join(folder, filename)
+            file_path = osjoin(folder, filename)
             try:
                 if isfile(file_path) or islink(file_path):
                     unlink(file_path)
@@ -76,6 +80,8 @@ class SoundcloudSnatcher:
 
     def downloadFromSpotify(self):
         self.emptyTemporaryDir()
+        if not utils.ffmpeg.is_ffmpeg_installed(ffmpeg='ffmpeg'):
+            utils.ffmpeg.download_ffmpeg()
         if "playlist" in self.url or "album" in self.url:
             first_cmd = fr"spotdl save {self.url} --save-file {osjoin('tmp', 'meta.spotdl')}"
             o = subprocess.check_output(first_cmd.split())
@@ -91,7 +97,7 @@ class SoundcloudSnatcher:
         else:
             cmd = f"spotdl {self.url} --output {self.specific_dir}"
             o = subprocess.check_output(cmd.split())
-            print(o)
+
 
     def downlaodFromYoutube(self):
         start_time = time()
@@ -125,6 +131,7 @@ class SoundcloudSnatcher:
             else:
                 self.snatchSong()
 
+
     def snatchPlaylist(self):
         playlist = self.api.resolve(self.url)
         self.mkdirIfNotExists()
@@ -142,9 +149,10 @@ class SoundcloudSnatcher:
         self.mkdirIfNotExists()
         with open(filename, 'wb+') as file:
             track.write_mp3_to(file)
+        return filename
 
     def constructFileName(self, track):
-        filename = f'{SoundcloudSnatcher.slugify(track.artist)} - {SoundcloudSnatcher.slugify(track.title)}.mp3'
+        filename = f'{SoundSnatcherBackend.slugify(track.artist)} - {SoundSnatcherBackend.slugify(track.title)}.mp3'
         if not self.no_dir:
             filename = osjoin(self.dir, filename)
         if self.specific_dir is not None:

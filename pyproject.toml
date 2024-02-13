@@ -7,12 +7,13 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
-sv-ttk = "^2.5.5"
 pillow = "^10.1.0"
 multidict = "6.0.4"
 soundcloud-lib = "^0.6.1"
 pytube = "^15.0.0"
 pyinstaller = "^6.1.0"
+spotdl = "^4.2.1"
+customtkinter = "^5.2.1"
 
 
 [tool.poetry.group.dev.dependencies]

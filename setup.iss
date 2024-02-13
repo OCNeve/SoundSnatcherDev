@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Sound Snatcher"
-#define MyAppVersion "1.1.0"
+#define MyAppVersion "1.2.0"
 #define MyAppPublisher "Olivier Neve"
 #define MyAppExeName "SoundSnatcher.exe"
 
@@ -10,7 +10,8 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{C6BC021C-0B09-481C-AAB3-372AFFF25683}
+SignTool=signtool
+AppId={{78054C9A-06F3-4A3E-B735-071C7414DCD6}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -18,7 +19,7 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-OutputDir=C:\Projects\Tools_and_utilities\soundcloud_getter
+OutputDir=C:\projects\soundsnatcher\SoundSnatcher
 OutputBaseFilename=sound_snatcher_setup
 Compression=lzma
 SolidCompression=yes
@@ -32,8 +33,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "C:\Projects\Tools_and_utilities\soundcloud_getter\dist\SoundSnatcher.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Projects\Tools_and_utilities\soundcloud_getter\logo.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\projects\soundsnatcher\SoundSnatcherDev\dist\SoundSnatcher.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\projects\soundsnatcher\SoundSnatcherDev\dist\SoundSnatcher_DEBUG.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
