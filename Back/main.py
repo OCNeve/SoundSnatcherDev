@@ -47,10 +47,7 @@ class SoundSnatcherBackend:
         else:
             self.dir = ""
         if auto_run:
-            if snatch_type == 'playlist':
-                self.snatchPlaylist()
-            else:
-                self.snatchSong()
+            self.downloadSourceManager()
 
     def setUrl(self, url):
         self.url = url
@@ -81,18 +78,22 @@ class SoundSnatcherBackend:
     def downloadFromSpotify(self):
         self.emptyTemporaryDir()
         if not utils.ffmpeg.is_ffmpeg_installed(ffmpeg='ffmpeg'):
+            print('installing ffmpeg')
             utils.ffmpeg.download_ffmpeg()
         if "playlist" in self.url or "album" in self.url:
             first_cmd = fr"spotdl save {self.url} --save-file {osjoin('tmp', 'meta.spotdl')}"
+            print("fetching playlist/album metadata")
             o = subprocess.check_output(first_cmd.split())
             if not exists(osjoin('tmp', 'meta.json')):
                 rename(osjoin("tmp", "meta.spotdl"), osjoin('tmp', 'meta.json'))
             metadata = loads(open(osjoin('tmp', 'meta.json'), "r").read())
+            print("got metadata\n")
             self.__total_playlist_length = len(metadata)
             for index, song in enumerate(metadata):
+                print(f"{index + 1}/{self.__total_playlist_length}: {song["name"]}\nby: {", ".join(song["artists"])}\n")
                 self.__current_index = index
                 self.url = song["url"]
-                cmd = f"spotdl {self.url} --output {self.specific_dir}"
+                cmd = f"spotdl {self.url} --output {self.specific_dir} --format wav"
                 o = subprocess.check_output(cmd.split())
         else:
             cmd = f"spotdl {self.url} --output {self.specific_dir}"
