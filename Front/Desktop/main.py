@@ -8,6 +8,14 @@ from Back.wavConverter import WavConverter
 from os import path
 import sys
 
+def check_os():
+    import os
+    if os.name == 'nt':
+        return 'Windows'
+    elif os.name == 'posix':
+        return 'MacOS'
+
+    return 'Not sure'
 
 def resource_path(relative_path):
     try:
@@ -41,7 +49,8 @@ class GUI:
         self.Back = SoundSnatcherBackend
         self.snatcher = Thread(target=self.getSnatchFunc)
         self.root.geometry("480x380")
-        self.root.iconbitmap(resource_path("logo.ico"))
+        if check_os() == 'Windows':
+            self.root.iconbitmap(resource_path("logo.ico"))
         self.root.title('Sound Snatcher')
         self.current_color = self.root["bg"]
         self.error = CTkLabel(self.root, fg_color=self.current_color)

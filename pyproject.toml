@@ -18,6 +18,7 @@ requests = "^2.31.0"
 charset-normalizer = "^3.3.2"
 chardet = "^5.2.0"
 validators = "^0.33.0"
+pykakasi = "^2.3.0"
 
 
 [build-system]

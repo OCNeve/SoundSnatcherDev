@@ -81,20 +81,33 @@ class SoundSnatcherBackend:
             print('installing ffmpeg')
             utils.ffmpeg.download_ffmpeg()
         if "playlist" in self.url or "album" in self.url:
-            first_cmd = fr"spotdl save {self.url} --save-file {osjoin('tmp', 'meta.spotdl')}"
+            metadata_file = f'{time()}meta.spotdl'
+            first_cmd = fr"spotdl save {self.url} --save-file {osjoin('tmp', metadata_file)}"
             print("fetching playlist/album metadata")
             o = subprocess.check_output(first_cmd.split())
-            if not exists(osjoin('tmp', 'meta.json')):
-                rename(osjoin("tmp", "meta.spotdl"), osjoin('tmp', 'meta.json'))
-            metadata = loads(open(osjoin('tmp', 'meta.json'), "r").read())
+            if not exists(osjoin('tmp', metadata_file)):
+                rename(osjoin("tmp", metadata_file), osjoin('tmp', metadata_file))
+            metadata = loads(open(osjoin('tmp', metadata_file), "r").read())
             print("got metadata\n")
+            print("Downloading in wav format, will revert to mp3 if it fails")
             self.__total_playlist_length = len(metadata)
             for index, song in enumerate(metadata):
-                print(f"{index + 1}/{self.__total_playlist_length}: {song["name"]}\nby: {", ".join(song["artists"])}\n")
+                print(f"{index + 1}/{self.__total_playlist_length}: {song["name"]}\n\tby: {", ".join(song["artists"])}\n")
                 self.__current_index = index
                 self.url = song["url"]
-                cmd = f"spotdl {self.url} --output {self.specific_dir} --format wav"
-                o = subprocess.check_output(cmd.split())
+                try:
+                    cmd = f"spotdl {self.url} --output {self.specific_dir} --format wav"
+                    o = subprocess.check_output(cmd.split())
+                except Exception as e:
+                    print(f"Download faild for mp3 format with the following message:\n{e}")
+                    print("Will try to download in default (mp3) format instead.")
+
+                    try:
+                        cmd = f"spotdl {self.url} --output {self.specific_dir}"
+                        o = subprocess.check_output(cmd.split())
+                    except Exception as e:
+                        print('retry failed with message:\n{e}')
+                        print('going to skip this one entirely')
         else:
             cmd = f"spotdl {self.url} --output {self.specific_dir}"
             o = subprocess.check_output(cmd.split())

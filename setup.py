@@ -9,11 +9,27 @@ from setuptools import setup
 
 APP = ['runDesktop.py']
 DATA_FILES = []
-OPTIONS = {'argv_emulation': True}
-
+OPTIONS = {
+     'packages': [
+         'multidict', 
+         'sclib',
+         'spotdl', 
+         'pytube', 
+         'customtkinter', 
+         'pydub', 
+         'requests', 
+         'charset_normalizer', 
+         'chardet', 
+         'validators',
+         'pykakasi'
+     ],
+    'iconfile':'logo.png',
+}
 setup(
     app=APP,
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
 )
+
+
